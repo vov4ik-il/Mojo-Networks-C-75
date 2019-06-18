@@ -2,7 +2,6 @@ Adding OpenWRT support for Mojo Networks C-75 (Airtight C-75)
 Airtight C-75 (Mojo Networks C-75) Dual radio, Dual concurrent 3x3 MIMO 802.11ac access point based on Qualcomm Atheros QCA9550.
 
 Specification:
-
 SoC	: Qualcomm Atheros QCA9550-AT4A
 RAM	: DDR2 128 MiB
 Flash	: SPI-NOR 2*16 MiB
@@ -18,73 +17,6 @@ J3: 1=3.3v 2=TX 3=RX 4=GND
 Settings: 115200 bps, no flow control
 JTag: Unpopulated J1
 
-Flashing Instructions (TFTP + Uboot Setup):
-1.Download "openwrt-ath79-generic-airtight_c-75-initramfs-kernel.bin" 
-and "openwrt-ath79-generic-airtight_c-75-squashfs-sysupgrade.bin" to 
-TFTP server root directory and verify chcksums.
-2. Set TFTP sevrer adress 192.168.1.100/24 on local machine connected to Mojo Networks C-75 device.
-3. Modify U-Boot Environment for dual-boot:
-- Connect using console (cisco cable, 115200n8)
-- Power on and press enter when prompted 
-- Type or copy&paste one line at a time! from section below
-- If messed up - do not press enter, just powercycle and start over.
-//
-setenv multiboot 1
-setenv initramfs ' echo Attempting to boot OpenWRT Ram Image...; set bootargs "console=ttyS0,115200 init=/sbin/init root=/dev/ram0 rw rd_start=0x81200000 rd_size=13M mtdparts=ath-nor0:256k(u-boot),128k(uboot-env),2048k(kernel),13312k(rootfs),576k(dummy),64k(ART);ath-nor1:16M(opt)";bootm 81000000'
-setenv openwrt 'echo Booting from internal Flash...;bootm 9f060000'
-setenv bootsel 'if tftp 81000000 openwrt-ath79-generic-airtight_c-75-initramfs-kernel.bin;then if imi 81000000;then run initramfs;else run openwrt;fi;else run openwrt;fi'
-setenv bootcmd 'if print multiboot&&test $multiboot = 1;then run bootcfg;run bootsel;else run openwrt;fi'
-setenv bootcfg 'set ipaddr 192.168.1.1;set serverip 192.168.1.100;set netretry no'
-setenv bootargs 'console=ttyS0,115200 root=31:03 rootfstype=jffs2 init=/sbin/init mtdparts=ath-nor0:256k(u-boot),128k(uboot-env),2048k(kernel),13888k(rootfs),64k(ART);ath-nor1:16M(opt)'
-setenv bootdelay 2
-setenv netmask 255.255.255.0
-setenv ipaddr 192.168.1.1
-setenv serverip 192.168.1.100
-setenv filesize 1000000
-setenv fileaddr 80060000
-printenv
-saveenv
-reset
-//
-- To make the boot faster (after done flashing):
-//
-setenv bootcmd 'run openwrt; fi'
-saveenv
-reset 
-//
-
-4. After the last command the unit will reset and autoload the initramfs image. U-boot does not initialize the switch properly 
-so you will most likely have to use a simple switch or cross-ethernet cable or TFTP will fail. 
-5. Open a web browser and navigate to 192.168.1.1 for the router Web Interface and login with a blank password.
-6. In the top menu click "System" -> "Backup/Flash Firmware",
-7. Save current firmware: Select "firmware" in "Save mtdblock contents" and click "Save mtdblock" - this is your only chance to save your current firmware to be able to go back to the original state!!! No official frimware download is provided anywhere. I would do it twice to make sure the file is not corrupt due to ethernet error!
-8. Flash OpenWRT frimware: In "Flash new firmware image" browse and select "openwrt-ath79-generic-airtight_c-65-squashfs-sysupgrade.bin", untick "Keep settings" and click "Flash firmware...", verify checksum with the original and click "Proceed"
-9. Wait about 150 seconds for the router to flash (if you interrupt the power - you can brick it, however it is 80% recoverable if you repeat from step 4)
-You just gave a new life to your Mojo Networks C-75 Wireless Access Point. Enjoy and consider donating to the project.
-
-Back to original firmware:
-1. From openwrt flash the file you had backed up of flashing instructions.
-2. Revert U-Boot:
-- Copy&paste one line at a time! If messed up - do not press enter, just powercycle and start over:
-//
-setenv multiboot
-setenv bootsel
-setenv ethact
-setenv initramfs
-setenv openwrt
-setenv bootcfg
-setenv filesize
-setenv fileaddr
-setenv serverip 192.168.1.10
-setenv ipaddr 192.168.1.15
-setenv netmask 255.255.252.0
-setenv bootcmd 'bootm 0x9F060000'
-setenv bootargs 'console=ttyS0,115200 root=31:03 rootfstype=jffs2 init=/sbin/init mtdparts=ath-nor0:256k(u-boot),128k(uboot-env),2048k(kernel),13888k(rootfs),64k(ART);ath-nor1:16M(opt)'
-setenv bootdelay 2
-printenv
-saveenv
-reset
-//
 Known limitations in this release:
  * This board has QCA9550-AT4A CPU but identified as QCA9558.
  * LEDs "2.4Ghz WiFi" and "Power Green" do not work, power is always orange and 2.4G is always off.
