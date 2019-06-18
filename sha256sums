@@ -1,0 +1,4 @@
+190571965fd4ce3cd56a69e954699c0a703129d313ba9679a21259e2747160e7 *config.seed
+0ac3388b90d16150b356f54251dd633e358368cec7296c5544bb75e522f346d6 *openwrt-ath79-generic-airtight_c-75-initramfs-kernel.bin
+3610b4ad186a87de3db5da590a70e66691684f818bbeb06d6f5a8ebfe9cda9b2 *openwrt-ath79-generic-airtight_c-75-squashfs-sysupgrade.bin
+d95a697cb4db9466d8fadf12418dc68dd8cc4504d9d8070a071c0e68c33e7fa7 *openwrt-ath79-generic-device-airtight-c-75.manifest
