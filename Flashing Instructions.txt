@@ -28,7 +28,7 @@ reset
 //
 - To make the boot faster (after done flashing):
 //
-setenv bootcmd 'run openwrt; fi'
+setenv bootcmd 'run openwrt'; fi
 saveenv
 reset 
 //
