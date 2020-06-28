@@ -5,8 +5,8 @@ TFTP server root directory and verify chcksums.
 2. Set TFTP sevrer adress 192.168.1.100/24 on local machine connected to Mojo Networks C-75 device.
 3. Modify U-Boot Environment for dual-boot:
 - Connect using console (cisco cable, 115200n8)
-- Power on and press enter when prompted 
-- Type or copy&paste one line at a time! from section below
+- Power on and press enter when the "Hit any key to stop autoboot:" prompt is shown
+- Type or copy & paste one line at a time from the section below!
 - If messed up - do not press enter, just powercycle and start over.
 //
 setenv multiboot 1
@@ -26,9 +26,10 @@ printenv
 saveenv
 reset
 //
-- To make the boot faster (after done flashing):
+- To make the boot faster (after done flashing in step 8):
+Press enter when the "Hit any key to stop autoboot:" prompt is shown then enter the 3 commands below
 //
-setenv bootcmd 'run openwrt'; fi
+setenv bootcmd 'run openwrt'
 saveenv
 reset 
 //
@@ -38,7 +39,7 @@ so you will most likely have to use a simple switch or cross-ethernet cable or T
 5. Open a web browser and navigate to 192.168.1.1 for the router Web Interface and login with a blank password.
 6. In the top menu click "System" -> "Backup/Flash Firmware",
 7. Save current firmware: Select "firmware" in "Save mtdblock contents" and click "Save mtdblock" - this is your only chance to save your current firmware to be able to go back to the original state!!! No official frimware download is provided anywhere. I would do it twice to make sure the file is not corrupt due to ethernet error!
-8. Flash OpenWRT frimware: In "Flash new firmware image" browse and select "openwrt-ath79-generic-airtight_c-65-squashfs-sysupgrade.bin", untick "Keep settings" and click "Flash firmware...", verify checksum with the original and click "Proceed"
+8. Flash OpenWRT frimware: In "Flash new firmware image" browse and select "openwrt-ath79-generic-airtight_c-75-squashfs-sysupgrade.bin", untick "Keep settings" and click "Flash firmware...", verify checksum with the original and click "Proceed". Repeat step 8 if an error about non-sysupgrade compatible firmware is shown, do not force upgrade!
 9. Wait about 150 seconds for the router to flash (if you interrupt the power - you can brick it, however it is 80% recoverable if you repeat from step 4)
 You just gave a new life to your Mojo Networks C-75 Wireless Access Point. Enjoy and consider donating to the project.
 
